@@ -1,0 +1,52 @@
+
+import os
+import csv
+
+DataFile = os.path.join('election_data.csv')
+
+Winner = ""
+Candidates = {}
+WinnerCount = 0
+VoteCount = 0
+CandidatePercent = {}
+
+
+with open(DataFile, newline = "") as csvfile:
+    CSVreader = csv.reader(csvfile, delimiter = ",")
+    next(CSVreader, None)
+
+
+    for row in CSVreader:
+        VoteCount += 1
+        if row[2] in Candidates.keys():
+            Candidates[row[2]] += 1
+        else:
+            Candidates[row[2]] = 1
+
+for key, value in Candidates.items():
+    CandidatePercent[key] = round((value/VoteCount) * 100, 2)
+
+for key in Candidates.keys():
+    if Candidates[key] > WinnerCount:
+        Winner = key
+        WinnerCount = Candidates[key]
+
+
+print("Results of the Election")
+print("Total Votes: " + str(VoteCount))
+for key, value in Candidates.items():
+    print(key + ": " + str(CandidatePercent[key]) + "% (" + str(value) + ")")
+print("Winner: " + Winner)
+
+
+new_file = open("output_file.txt", "w")
+
+new_file.write("Election Results \n")
+new_file.write("Total Votes: " + str(VoteCount) + "\n")
+for key, value in Candidates.items():
+    new_file.write(key + ": " + str(CandidatePercent[key]) + "% (" + str(value) + ") \n")
+new_file.write("Winner: " + Winner + "\n")
+
+
+
+
